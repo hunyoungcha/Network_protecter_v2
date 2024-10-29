@@ -11,8 +11,8 @@ LDFLAGS = -lPcap++ -lPacket++ -lCommon++ -lpcap -lpthread -lsqlite3
 TARGET = NetworkProtecter
 
 # 소스 파일과 헤더 파일 찾기
-SOURCES = $(wildcard firewall.cpp)
-HEADERS = $(wildcard firewall.hpp)
+SOURCES = $(wildcard *.cpp)
+HEADERS = $(wildcard *.hpp)
 OBJECTS = $(SOURCES:.cpp=.o)
 
 # 기본 타겟 설정

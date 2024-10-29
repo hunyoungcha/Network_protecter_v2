@@ -3,13 +3,11 @@
 
 int main(){
     CConfigDB IConfigDB;
-    CFirewall IFirewall(IConfigDB);
+    // CFirewall IFirewall(IConfigDB);
+    CPacketHandler IPacketHander;
 
-    // Ifirewall.RunFirewall();
-
-    IFirewall.GetDeviceName();
-    IFirewall.RunFirewall();
-
+    IPacketHander.GetDeviceName();
+    IPacketHander.RunPacketCapture();
     
     return 0;
 }

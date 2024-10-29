@@ -7,7 +7,5 @@
 
 class CIni {
     public:
-        bool isValidNumber(const std::string& strNumber);
-
 
 };

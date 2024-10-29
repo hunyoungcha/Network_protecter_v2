@@ -8,7 +8,12 @@
 #include <pcapplusplus/TcpLayer.h>
 #include <pcapplusplus/IPv4Layer.h>
 
-class CFirewall {
+class CPacketHandler {
     public:
-        pcpp::PcapLiveDevice* GetDeviceName();
+        int GetDeviceName();
+        static void packetArrives(pcpp::RawPacket* rawPacket, pcpp::PcapLiveDevice* dev, void* userData);
+        int RunPacketCapture();
+
+    private:
+        pcpp::PcapLiveDevice* m_device;
 };

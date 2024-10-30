@@ -49,8 +49,6 @@ void CPacketHandler::packetArrives(pcpp::RawPacket* rawPacket, pcpp::PcapLiveDev
 }
 
 int CPacketHandler::RunPacketCapture(){
-    pcpp::PcapLiveDevice* dev = pcpp::PcapLiveDeviceList::getInstance().getPcapLiveDeviceByName("ens33");  // 'eth0'를 자신의 인터페이스 이름으로 변경
-
     if (!m_device->open()) {
         std::cerr << "인터페이스를 열 수 없습니다." << std::endl;
         return 1;

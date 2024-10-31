@@ -35,7 +35,7 @@ void CPacketHandler::packetArrives(pcpp::RawPacket* rawPacket, pcpp::PcapLiveDev
 
     // IP 레이어가 존재하는지 확인하고 출력
     pcpp::IPv4Layer* ipLayer = parsedPacket.getLayerOfType<pcpp::IPv4Layer>();
-    if (ipLayer != nullptr) {
+    if (ipLayer != nullptr) {    
         std::cout << "Source IP: " << ipLayer->getSrcIPAddress().toString() 
                   << " -> Destination IP: " << ipLayer->getDstIPAddress().toString() << std::endl;
     }

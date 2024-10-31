@@ -2,11 +2,18 @@
 #include "ini.hpp"
 #include "configDB.hpp"
 
-#include <pcapplusplus/PcapLiveDeviceList.h>
-#include <pcapplusplus/PcapLiveDevice.h>
-#include <pcapplusplus/Packet.h>
-#include <pcapplusplus/TcpLayer.h>
-#include <pcapplusplus/IPv4Layer.h>
+#include <PcapLiveDeviceList.h>
+#include <PcapLiveDevice.h>
+#include <Packet.h>
+#include <TcpLayer.h>
+#include <IPv4Layer.h>
+#include <PcapFilter.h>
+
+
+#include <thread>
+#include <mutex>
+#include <queue>
+#include <condition_variable>
 
 class CPacketHandler {
     public:
@@ -16,4 +23,8 @@ class CPacketHandler {
 
     private:
         pcpp::PcapLiveDevice* m_device;
+        std::queue<pcpp::RawPacket> m_phishingQueue, m_firewallQueue;
+        std::mutex m_phishingMutex, m_firewallMutex;
+        std::condition_variable m_phishingCV, m_firewallCV;
+        
 };

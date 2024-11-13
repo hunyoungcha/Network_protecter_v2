@@ -14,7 +14,6 @@ int CPacketHandler::GetDeviceName(){
                   << " (" << vecDevices[i]->getIPv4Address().toString() << ")" << std::endl;
     }
 
-
     int nDeviceIndex = -1;
     std::cout << "NUMBER: ";
     std::cin >> nDeviceIndex;
@@ -33,19 +32,25 @@ void CPacketHandler::packetArrives(pcpp::RawPacket* rawPacket, pcpp::PcapLiveDev
     // RawPacket을 Packet 객체로 변환
     pcpp::Packet parsedPacket(rawPacket);
 
-    // IP 레이어가 존재하는지 확인하고 출력
-    pcpp::IPv4Layer* ipLayer = parsedPacket.getLayerOfType<pcpp::IPv4Layer>();
-    if (ipLayer != nullptr) {    
-        std::cout << "Source IP: " << ipLayer->getSrcIPAddress().toString() 
-                  << " -> Destination IP: " << ipLayer->getDstIPAddress().toString() << std::endl;
-    }
-
-    // TCP 레이어가 존재하는지 확인하고 출력
     pcpp::TcpLayer* tcpLayer = parsedPacket.getLayerOfType<pcpp::TcpLayer>();
+
+    // 웹 패킷 확인 (확인이 아닌 queue에 해당 패킷을 그대로 저장하도록 변경해야 함)
     if (tcpLayer != nullptr) {
-        std::cout << "TCP Port: " << tcpLayer->getTcpHeader()->portSrc << " -> "
-                  << tcpLayer->getTcpHeader()->portDst << std::endl;
+        uint16_t srcPort = ntohs(tcpLayer->getTcpHeader()->portSrc);
+        uint16_t dstPort = ntohs(tcpLayer->getTcpHeader()->portDst);
+        
+        if (srcPort == 80 || srcPort == 443 || dstPort == 80 || dstPort == 443) {
+            std::cout << "srcPort : " << srcPort << std::endl;
+            std::cout << "dstPort : " << dstPort << std::endl;    
+        }
     }
+    // IP 레이어가 존재하는지 확인하고 출력
+    // pcpp::IPv4Layer* ipLayer = parsedPacket.getLayerOfType<pcpp::IPv4Layer>();
+    // if (ipLayer != nullptr) {    
+    //     std::cout << "Source IP: " << ipLayer->getSrcIPAddress().toString() 
+    //               << " -> Destination IP: " << ipLayer->getDstIPAddress().toString() << std::endl;
+    // }
+
 }
 
 int CPacketHandler::RunPacketCapture(){
@@ -59,7 +64,7 @@ int CPacketHandler::RunPacketCapture(){
     //캡처 stop하고 close하는 거 다시 구현 필요
     
     //입력 버퍼에 저장된 데이터 다 제거
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cin.ignore();
     
     //Enter를 트리거로 패킷 캡처 조절
     std::cin.get();

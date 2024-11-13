@@ -8,7 +8,7 @@
 #include <TcpLayer.h>
 #include <IPv4Layer.h>
 #include <PcapFilter.h>
-
+#include <arpa/inet.h>
 
 #include <thread>
 #include <mutex>

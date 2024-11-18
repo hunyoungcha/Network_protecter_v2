@@ -4,7 +4,8 @@
 int main(){
     CConfigDB IConfigDB;
     // CFirewall IFirewall(IConfigDB);
-    CPacketHandler IPacketHander;
+    CQueueManager IQueueManager;
+    CPacketHandler IPacketHander(IQueueManager);
 
     IPacketHander.GetDeviceName();
     IPacketHander.RunPacketCapture();

@@ -1,5 +1,6 @@
 #include "packetHandler.hpp"
 
+
 int CPacketHandler::GetDeviceName(){
     std::vector<pcpp::PcapLiveDevice*> vecDevices = pcpp::PcapLiveDeviceList::getInstance().getPcapLiveDevicesList();
 
@@ -29,7 +30,9 @@ int CPacketHandler::GetDeviceName(){
 }
 
 void CPacketHandler::packetArrives(pcpp::RawPacket* rawPacket, pcpp::PcapLiveDevice* dev, void* userData) {
-    // RawPacket을 Packet 객체로 변환
+    
+    auto* handler = static_cast<CPacketHandler*>(userData);
+    
     pcpp::Packet parsedPacket(rawPacket);
 
     pcpp::TcpLayer* tcpLayer = parsedPacket.getLayerOfType<pcpp::TcpLayer>();
@@ -40,8 +43,7 @@ void CPacketHandler::packetArrives(pcpp::RawPacket* rawPacket, pcpp::PcapLiveDev
         uint16_t dstPort = ntohs(tcpLayer->getTcpHeader()->portDst);
         
         if (srcPort == 80 || srcPort == 443 || dstPort == 80 || dstPort == 443) {
-            std::cout << "srcPort : " << srcPort << std::endl;
-            std::cout << "dstPort : " << dstPort << std::endl;    
+            handler->queueManager.AddToQueue(std::make_shared<pcpp::Packet>(parsedPacket));
         }
     }
     // IP 레이어가 존재하는지 확인하고 출력
@@ -59,7 +61,7 @@ int CPacketHandler::RunPacketCapture(){
         return 1;
     }
     
-    m_device->startCapture(CPacketHandler::packetArrives, nullptr);
+    m_device->startCapture(CPacketHandler::packetArrives, this);
     
     //캡처 stop하고 close하는 거 다시 구현 필요
     
